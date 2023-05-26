@@ -1,6 +1,6 @@
 
 import { initializeApp } from "firebase/app";
-import {GoogleAuthProvider,signInWithPopup,getAuth} from "firebase/auth"
+import {GoogleAuthProvider,signInWithPopup,getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword} from "firebase/auth"
 import {doc, getDoc, getFirestore, setDoc} from "firebase/firestore"
 const firebaseConfig = {
   apiKey: "AIzaSyCAg7ncaeVzXb5VBvo4EWs_w0Ttewxw6DU",
@@ -30,7 +30,10 @@ export const signInWithGooglePopup = () =>
 const db = getFirestore()
 
 
-export const createUserWithGoogleAuth = async (userAuth) =>{
+export const createUserWithGoogleAuth = async (userAuth,additionalInfo ={}) =>{
+  if(!userAuth){
+    return;
+  }
 const userDocRef = doc(db,"user",userAuth.uid)
 const userSnapshot = await getDoc(userDocRef)
 if(!userSnapshot.exists()){
@@ -40,7 +43,8 @@ if(!userSnapshot.exists()){
     await setDoc(userDocRef,{
         displayName:displayName,
         email:email,
-        createdAt
+        createdAt:createdAt,
+        ...additionalInfo
     })
   }
   catch (err){
@@ -53,6 +57,19 @@ return userDocRef
 
 
 
+export const createAuthUserWithEmailAndPassword = async  (email,password)=>{
+  if(!password || !email ){
+    return;
+  }
+  return await createUserWithEmailAndPassword(auth,email,password)
+}
+
+
+
+
+export const signInUserWithEmailandPassword = async (email,password)=>{
+  return await signInWithEmailAndPassword(auth,email,password)
+}
 
 
 
@@ -63,31 +80,3 @@ return userDocRef
 
 
 
-
-
-
-
-
-// export const createUserWithGoogleeAuth = async (userAuth) =>{
-//     const userDocRef = doc(db,"user",userAuth.uid)
-
-//     const userSnap = await getDoc(userDocRef)
-
-//     if (!userSnap.exists()) {
-//         const { displayName, email } = userAuth;
-//         const createdAt = new Date();
-//      try{
-//         await setDoc(userDocRef,{
-//             displayName:displayName,
-//             email:email,
-//             createdAt:createdAt
-//         })}
-//         catch (err){
-//             console.log(err.message)
-//         }
-     
-
-
-//     }
-//     return userDocRef;
-// }

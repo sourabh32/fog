@@ -1,9 +1,10 @@
 import { BrowserRouter,Routes,Route } from "react-router-dom"
 
 import Header from "./components/Header"
-import Account from "./components/Account"
-import Checkout from "./components/Checkout"
-import Home from "./components/Home"
+import Home from "./routes/Home"
+import Checkout from "./routes/Checkout"
+import Account from "./routes/Account"
+
 function App() {
   
 
